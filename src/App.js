@@ -1,32 +1,41 @@
 import './App.css';
 import { data } from './Data';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
- const arr = data;
-  const [val, setval] = useState("");
+  const [val, setVal] = useState({});
+  const [result, setResult] = useState([]);
   const set = (v) => {
-    setval({ ...val, [v.target.name]: v.target.value });
-    console.log(val);
-  }
-  const enterData = (e) => {
-    console.log("ohk");
-  }
+    setVal({ ...val, [v.target.name]: v.target.value });
+  };
+  const enterData = () => {
+    setResult([...result, val]);
+  };
+  useEffect(() => {
+    setResult(data);
+  }, []);
+
+  const deleteData = (author) => {
+    setResult(result.filter((e) => e.author !== author));
+  };
 
   return (
     <div className="App">
       <div className='mt-4'>
         <input type='text' name='title' onChange={set} />
-        <input type='text' name='auther' onChange={set} />
-        <button onClick={enterData}>Add</button>
+        <input type='text' name='author' onChange={set} />
+        <button onClick={enterData} className='btn btn-secondary btn-lg"'>Add</button>
       </div>
       <div>
-        {arr.map((e, i) => (
-          <div>
-            <h3>{e.title}</h3>
-            <p>{e.title}</p>
-          </div>
-        ))}
+        {result?.map((val, ind) => {
+          return (
+            <>
+              <h3>{val.author}</h3>
+              <p>{val.title}</p>
+              <button onClick={() => deleteData(val.author)} className='btn btn-secondary btn-lg"'>Delete</button>
+            </>
+          );
+        })}
       </div>
     </div>
   );
